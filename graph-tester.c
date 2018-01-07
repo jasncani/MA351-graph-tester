@@ -7,6 +7,13 @@
 
 int vertices, *matrix[0];
 
+void matrix_sum(int *mat1[], int *mat2[], int res[vertices][vertices]) {
+	int i, j;
+	for(i = 0; i < vertices; i++)
+		for(j = 0; j < vertices; j++)
+			res[i][j] = mat1[i][j] + mat2[i][j];
+}
+
 void matrix_product(int *mat1[], int *mat2[], int res[vertices][vertices]) {
 	int i, j, k;
 	for(i = 0; i < vertices; i++)
@@ -40,13 +47,13 @@ void fill_matrix() {
 int main() {
 	fill_matrix();
 
-	int mp[vertices][vertices];
-	matrix_product(matrix, matrix, mp);
+	int ms[vertices][vertices];
+	matrix_sum(matrix, matrix, ms);
 
 	int row, col;
 	for(row = 0; row < vertices; row++) {
 		for(col = 0; col < vertices; col++)
-			printf("%d ", mp[row][col]);
+			printf("%d ", ms[row][col]);
 		printf("\n");
 	}
 
