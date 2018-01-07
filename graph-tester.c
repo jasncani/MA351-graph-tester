@@ -7,6 +7,16 @@
 
 int vertices, *matrix[0];
 
+void matrix_product(int *mat1[], int *mat2[], int res[vertices][vertices]) {
+	int i, j, k;
+	for(i = 0; i < vertices; i++)
+		for(j = 0; j < vertices; j++) {
+			res[i][j] = 0;
+			for(k = 0; k < vertices; k++)
+				res[i][j] += mat1[i][k] * mat2[k][j];
+		}
+}
+
 void fill_matrix() {
 	int row, col;
 	FILE *fptr = fopen("matrix.dat", "r");
@@ -14,28 +24,31 @@ void fill_matrix() {
 		printf("Error opening matrix.dat");
 		exit(1);
 	}
-	
+
 	fscanf(fptr, "%d", &vertices);
 	realloc(matrix, vertices * sizeof(int *));
-	
+
 	for(row = 0; row < vertices; row++) {
 		matrix[row] = (int *)malloc(vertices * sizeof(int));
 		for(col = 0; col < vertices; col++)
 			fscanf(fptr, "%d", &matrix[row][col]);
 	}
-	
+
 	fclose(fptr);
 }
 
 int main() {
 	fill_matrix();
-	
+
+	int mp[vertices][vertices];
+	matrix_product(matrix, matrix, mp);
+
 	int row, col;
 	for(row = 0; row < vertices; row++) {
 		for(col = 0; col < vertices; col++)
-			printf("%d ", matrix[row][col]);
+			printf("%d ", mp[row][col]);
 		printf("\n");
 	}
-	
+
 	return 0;
 }
