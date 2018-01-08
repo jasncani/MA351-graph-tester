@@ -69,6 +69,30 @@ void matrix_power(int v, int matrix[v][v], int power, int res[v][v]) {
 	}
 }
 
+int disjoint_tester(int vertices, int matrix[vertices][vertices]) {
+	int i, j;
+	int sum_matrix[vertices][vertices], pwr_matrix[vertices][vertices];
+	for (i = 0; i < vertices; i++) {
+		for (j = 0; j < vertices; j++) {
+			sum_matrix[i][j] = 0;
+		}
+	}
+	for (i = 0; i < vertices; i++) {
+		matrix_power(vertices, matrix, i, pwr_matrix);
+		matrix_sum(vertices, pwr_matrix, sum_matrix, sum_matrix);
+	}
+
+	for (i = 0; i < vertices; i++) {
+		for (j = 0; j < vertices; j++) {
+			if (!sum_matrix[i][j]) {
+				return 1;
+			}
+		}
+	}
+
+	return 0;
+}
+
 int main() {
 	int i, j, k, vertices;
 
@@ -83,31 +107,10 @@ int main() {
 	fill_matrix(fptr, vertices, matrix);
 	fclose(fptr);
 
-	int sum_matrix[vertices][vertices], pwr_matrix[vertices][vertices];
-	for (i = 0; i < vertices; i++) {
-		for (j = 0; j < vertices; j++) {
-			sum_matrix[i][j] = 0;
-		}
-	}
-	for (i = 0; i < vertices; i++) {
-		matrix_power(vertices, matrix, i, pwr_matrix);
-		matrix_sum(vertices, pwr_matrix, sum_matrix, sum_matrix);
-	}
-
-	int disjoint = 0;
-	for (i = 0; i < vertices; i++) {
-		for (j = 0; j < vertices; j++) {
-			if (!sum_matrix[i][j]) {
-				disjoint = 1;
-				break;
-			}
-		}
-	}
-
+	int disjoint = disjoint_tester(vertices, matrix);
 	if (disjoint) {
 		printf("The graph is disjoint.\n");
-	}
-	else {
+	} else {
 		printf("The graph is connected.\n");
 	}
 
