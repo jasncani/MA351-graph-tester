@@ -70,7 +70,7 @@ void matrix_power(int v, int matrix[v][v], int power, int res[v][v]) {
 }
 
 int main() {
-	int i, j, vertices;
+	int i, j, k, vertices;
 
 	FILE *fptr = fopen("matrix.dat", "r");
 	if(fptr == NULL) {
@@ -83,13 +83,32 @@ int main() {
 	fill_matrix(fptr, vertices, matrix);
 	fclose(fptr);
 
-	int pwr_matrix[vertices][vertices];
-	matrix_power(vertices, matrix, 0, pwr_matrix);
+	int sum_matrix[vertices][vertices], pwr_matrix[vertices][vertices];
 	for (i = 0; i < vertices; i++) {
 		for (j = 0; j < vertices; j++) {
-			printf("%d ", pwr_matrix[i][j]);
+			sum_matrix[i][j] = 0;
 		}
-		printf("\n");
+	}
+	for (i = 0; i < vertices; i++) {
+		matrix_power(vertices, matrix, i, pwr_matrix);
+		matrix_sum(vertices, pwr_matrix, sum_matrix, sum_matrix);
+	}
+
+	int disjoint = 0;
+	for (i = 0; i < vertices; i++) {
+		for (j = 0; j < vertices; j++) {
+			if (!sum_matrix[i][j]) {
+				disjoint = 1;
+				break;
+			}
+		}
+	}
+
+	if (disjoint) {
+		printf("The graph is disjoint.\n");
+	}
+	else {
+		printf("The graph is connected.\n");
 	}
 
 	return 0;
