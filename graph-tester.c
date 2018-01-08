@@ -44,6 +44,31 @@ void fill_id_matrix(int v, int id_matrix[v][v]) {
 	}
 }
 
+void copy_matrix(int v, int original_matrix[v][v], int copy_matrix[v][v]) {
+	int i, j;
+	for (i = 0; i < v; i++) {
+		for (j = 0; j < v; j++) {
+			copy_matrix[i][j] = original_matrix[i][j];
+		}
+	}
+}
+
+void matrix_power(int v, int matrix[v][v], int power, int res[v][v]) {
+	int i, tmp[v][v];
+	if (power == 0) {
+		fill_id_matrix(v, res);
+		return;
+	}
+	if (power == 1) {
+		copy_matrix(v, matrix, res);
+	}
+	copy_matrix(v, matrix, tmp);
+	for (i = 1; i < power; i++) {
+		matrix_product(v, tmp, matrix, res);
+		copy_matrix(v, res, tmp);
+	}
+}
+
 int main() {
 	int i, j, vertices;
 
@@ -57,6 +82,15 @@ int main() {
 	int matrix[vertices][vertices];
 	fill_matrix(fptr, vertices, matrix);
 	fclose(fptr);
+
+	int pwr_matrix[vertices][vertices];
+	matrix_power(vertices, matrix, 0, pwr_matrix);
+	for (i = 0; i < vertices; i++) {
+		for (j = 0; j < vertices; j++) {
+			printf("%d ", pwr_matrix[i][j]);
+		}
+		printf("\n");
+	}
 
 	return 0;
 }
