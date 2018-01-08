@@ -5,27 +5,39 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int vertices, *matrix[0];
-
-void matrix_sum(int *mat1[], int *mat2[], int res[vertices][vertices]) {
+void matrix_sum(int v, int mat1[v][v], int mat2[v][v], int res[v][v]) {
 	int i, j;
-	for(i = 0; i < vertices; i++)
-		for(j = 0; j < vertices; j++)
+	for(i = 0; i < v; i++) {
+		for(j = 0; j < v; j++) {
 			res[i][j] = mat1[i][j] + mat2[i][j];
-}
-
-void matrix_product(int *mat1[], int *mat2[], int res[vertices][vertices]) {
-	int i, j, k;
-	for(i = 0; i < vertices; i++)
-		for(j = 0; j < vertices; j++) {
-			res[i][j] = 0;
-			for(k = 0; k < vertices; k++)
-				res[i][j] += mat1[i][k] * mat2[k][j];
 		}
+	}
 }
 
-void fill_matrix() {
-	int row, col;
+void matrix_product(int v, int mat1[v][v], int mat2[v][v], int res[v][v]) {
+	int i, j, k;
+	for(i = 0; i < v; i++) {
+		for(j = 0; j < v; j++) {
+			res[i][j] = 0;
+			for(k = 0; k < v; k++) {
+				res[i][j] += mat1[i][k] * mat2[k][j];
+			}
+		}
+	}
+}
+
+void fill_matrix(FILE *fptr, int v, int matrix[v][v]) {
+	int i, j;
+	for(i = 0; i < v; i++) {
+		for(j = 0; j < v; j++) {
+			fscanf(fptr, "%d", &matrix[i][j]);
+		}
+	}
+}
+
+int main() {
+	int i, j, vertices;
+
 	FILE *fptr = fopen("matrix.dat", "r");
 	if(fptr == NULL) {
 		printf("Error opening matrix.dat");
@@ -33,29 +45,9 @@ void fill_matrix() {
 	}
 
 	fscanf(fptr, "%d", &vertices);
-	realloc(matrix, vertices * sizeof(int *));
-
-	for(row = 0; row < vertices; row++) {
-		matrix[row] = (int *)malloc(vertices * sizeof(int));
-		for(col = 0; col < vertices; col++)
-			fscanf(fptr, "%d", &matrix[row][col]);
-	}
-
+	int matrix[vertices][vertices];
+	fill_matrix(fptr, vertices, matrix);
 	fclose(fptr);
-}
-
-int main() {
-	fill_matrix();
-
-	int ms[vertices][vertices];
-	matrix_sum(matrix, matrix, ms);
-
-	int row, col;
-	for(row = 0; row < vertices; row++) {
-		for(col = 0; col < vertices; col++)
-			printf("%d ", ms[row][col]);
-		printf("\n");
-	}
 
 	return 0;
 }
