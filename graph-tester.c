@@ -35,6 +35,15 @@ void fill_matrix(FILE *fptr, int v, int matrix[v][v]) {
 	}
 }
 
+void fill_id_matrix(int v, int id_matrix[v][v]) {
+	int i, j;
+	for (i = 0; i < v; i++) {
+		for (j = 0; j < v; j++) {
+			id_matrix[i][j] = i == j;
+		}
+	}
+}
+
 int main() {
 	int i, j, vertices;
 
